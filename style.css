@@ -57,3 +57,27 @@ button {
 
     border-radius: 10px;
 }
+
+.info-jogador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.acoes-jogador {
+    display: flex;
+    gap: 8px;
+}
+
+.botao-editar,
+.botao-excluir {
+    width: auto;
+    margin: 0;
+    padding: 8px 10px;
+    font-size: 14px;
+}
+
+.jogador {
+    justify-content: space-between;
+}
