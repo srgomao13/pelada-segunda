@@ -17,6 +17,102 @@
 
         <p>Selecione os jogadores presentes.</p>
 
+        <button id="botao-adicionar-jogador">
+            + Adicionar jogador
+        </button>
+
+        <section id="formulario-jogador" style="display: none;">
+
+            <h2>Novo jogador</h2>
+
+            <input
+                type="text"
+                id="novo-nome"
+                placeholder="Nome"
+            >
+
+            <select id="novo-tipo">
+                <option value="Mensalista">Mensalista</option>
+                <option value="Diarista">Diarista</option>
+            </select>
+
+            <select id="nova-nota">
+                <option value="0">0,0</option>
+                <option value="0.5">0,5</option>
+                <option value="1">1,0</option>
+                <option value="1.5">1,5</option>
+                <option value="2">2,0</option>
+                <option value="2.5">2,5</option>
+                <option value="3">3,0</option>
+                <option value="3.5">3,5</option>
+                <option value="4">4,0</option>
+                <option value="4.5">4,5</option>
+                <option value="5">5,0</option>
+                <option value="5.5">5,5</option>
+                <option value="6">6,0</option>
+                <option value="6.5">6,5</option>
+                <option value="7">7,0</option>
+                <option value="7.5">7,5</option>
+                <option value="8">8,0</option>
+                <option value="8.5">8,5</option>
+                <option value="9">9,0</option>
+                <option value="9.5">9,5</option>
+                <option value="10">10,0</option>
+            </select>
+
+            <select id="nova-posicao">
+                <option value="Zagueiro">Zagueiro</option>
+                <option value="Meia">Meia</option>
+                <option value="Meia-atacante">Meia-atacante</option>
+                <option value="Atacante">Atacante</option>
+            </select>
+
+            <label>
+                Posições secundárias:
+            </label>
+
+            <label>
+                <input
+                    type="checkbox"
+                    class="secundaria-checkbox"
+                    value="Zagueiro"
+                >
+                Zagueiro
+            </label>
+        
+            <label>
+                <input
+                    type="checkbox"
+                    class="secundaria-checkbox"
+                    value="Meia"
+                >
+                Meia
+            </label>
+        
+            <label>
+                <input
+                    type="checkbox"
+                    class="secundaria-checkbox"
+                    value="Meia-atacante"
+                >
+                Meia-atacante
+            </label>
+        
+            <label>
+                <input
+                    type="checkbox"
+                    class="secundaria-checkbox"
+                    value="Atacante"
+                >
+                Atacante
+            </label>
+        
+            <button id="salvar-jogador">
+                Salvar jogador
+            </button>
+
+</section>
+
         <section id="lista-jogadores"></section>
 
         <button id="botao-sortear">
