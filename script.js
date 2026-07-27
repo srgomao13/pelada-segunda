@@ -1176,14 +1176,7 @@ function mostrarTresTimes(time1, time2, time3) {
 
         </div>
 
-        <div class="time">
-
-            <strong>
-                Diferença máxima entre os times:
-                ${diferenca.toFixed(1)}
-            </strong>
-
-        </div>
+        
     `;
 }
 
@@ -1236,13 +1229,6 @@ function mostrarDoisTimesComReservas(
                 : ""
         }
 
-        <div class="time">
-
-            <strong>
-                Diferença entre os times:
-                ${diferenca.toFixed(1)}
-            </strong>
-
-        </div>
+        
     `;
 }
