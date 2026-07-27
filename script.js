@@ -206,8 +206,7 @@ function criarGrupoJogadores(
         
                     <br>
         
-                    Nota ${jogador.nota}
-                    • ${jogador.posicao}
+                    ${jogador.posicao}
                     ${
                         jogador.secundarias.length > 0
                             ? ` → ${jogador.secundarias.join(" / ")}`
@@ -1118,7 +1117,6 @@ function criarListaTime(time) {
 
         <p>
             <strong>${jogador.nome}</strong>
-            — ${jogador.nota.toFixed(1)}
             — ${jogador.posicao}
         </p>
 
@@ -1151,7 +1149,7 @@ function mostrarTresTimes(time1, time2, time3) {
         <div class="time">
 
             <h2>
-                Time 1 — ${notaTime1.toFixed(1)}
+                Time 1
             </h2>
 
             ${criarListaTime(time1)}
@@ -1161,7 +1159,7 @@ function mostrarTresTimes(time1, time2, time3) {
         <div class="time">
 
             <h2>
-                Time 2 — ${notaTime2.toFixed(1)}
+                Time 2
             </h2>
 
             ${criarListaTime(time2)}
@@ -1171,7 +1169,7 @@ function mostrarTresTimes(time1, time2, time3) {
         <div class="time">
 
             <h2>
-                Time 3 — ${notaTime3.toFixed(1)}
+                Time 3
             </h2>
 
             ${criarListaTime(time3)}
