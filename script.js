@@ -762,19 +762,6 @@ function gerarDoisTimesComReservas(presentes) {
     return melhores[indiceAleatorio];
 }
 
-    // Pega as 10 divisões mais equilibradas
-    const melhores =
-        solucoes.slice(0, 10);
-
-    // Sorteia uma delas
-    const indiceAleatorio =
-        Math.floor(
-            Math.random() * melhores.length
-        );
-
-    return melhores[indiceAleatorio];
-}
-
 function compararSolucoes(a, b) {
 
     // Primeiro: diferença de nota
