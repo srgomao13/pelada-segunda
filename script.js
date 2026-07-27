@@ -1,4 +1,4 @@
-const jogadores = [
+let jogadores = [
     {
         nome: "João Gabriel",
         nota: 6.5,
@@ -106,6 +106,29 @@ const jogadores = [
     }
 ];
 
+function salvarJogadores() {
+
+    localStorage.setItem(
+        "jogadoresPelada",
+        JSON.stringify(jogadores)
+    );
+}
+
+function carregarJogadores() {
+
+    const jogadoresSalvos =
+        localStorage.getItem(
+            "jogadoresPelada"
+        );
+
+    if (jogadoresSalvos) {
+
+        jogadores =
+            JSON.parse(jogadoresSalvos);
+
+    }
+}
+
 const listaJogadores = document.getElementById("lista-jogadores");
 
 function mostrarJogadores() {
@@ -135,10 +158,125 @@ function mostrarJogadores() {
     });
 }
 
+carregarJogadores();
 mostrarJogadores();
 
 const botaoSortear = document.getElementById("botao-sortear");
 const resultado = document.getElementById("resultado");
+const botaoAdicionarJogador =
+    document.getElementById(
+        "botao-adicionar-jogador"
+    );
+
+const formularioJogador =
+    document.getElementById(
+        "formulario-jogador"
+    );
+
+botaoAdicionarJogador.addEventListener(
+    "click",
+    () => {
+
+        const estaAberto =
+            formularioJogador.style.display === "block";
+
+        formularioJogador.style.display =
+            estaAberto ? "none" : "block";
+
+    }
+);
+const botaoSalvarJogador =
+    document.getElementById(
+        "salvar-jogador"
+    );
+
+botaoSalvarJogador.addEventListener(
+    "click",
+    () => {
+
+        const nome =
+            document
+                .getElementById("novo-nome")
+                .value
+                .trim();
+
+        const tipo =
+            document
+                .getElementById("novo-tipo")
+                .value;
+
+        const nota =
+            Number(
+                document
+                    .getElementById("nova-nota")
+                    .value
+            );
+
+        const posicao =
+            document
+                .getElementById("nova-posicao")
+                .value;
+
+        const checkboxes =
+            document.querySelectorAll(
+                ".secundaria-checkbox:checked"
+            );
+
+        const secundarias = [];
+
+        checkboxes.forEach(checkbox => {
+            secundarias.push(checkbox.value);
+        });
+
+        if (!nome) {
+            alert("Digite o nome do jogador.");
+            return;
+        }
+
+        const novoJogador = {
+            nome,
+            nota,
+            posicao,
+            secundarias,
+            tipo
+        };
+
+        jogadores.push(novoJogador);
+
+        salvarJogadores();
+
+        mostrarJogadores();
+
+        limparFormularioJogador();
+
+        formularioJogador.style.display = "none";
+
+    }
+);
+
+function limparFormularioJogador() {
+
+    document.getElementById(
+        "novo-nome"
+    ).value = "";
+
+    document.getElementById(
+        "nova-nota"
+    ).value = "5";
+
+    document.getElementById(
+        "nova-posicao"
+    ).value = "Zagueiro";
+
+    document
+        .querySelectorAll(
+            ".secundaria-checkbox"
+        )
+        .forEach(checkbox => {
+            checkbox.checked = false;
+        });
+}
+
 botaoSortear.addEventListener("click", () => {
 
     cacheFormacoes.clear();
