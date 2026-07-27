@@ -639,54 +639,56 @@ function gerarDoisTimesEquilibrados(presentes) {
 
 function gerarDoisTimesComReservas(presentes) {
 
-   const mensalistas =
-        embaralhar(
-            presentes.filter(
-                jogador =>
-                    jogador.tipo ===
-                    "Mensalista"
-            )
-        );
-    
-    const diaristas =
-        embaralhar(
-            presentes.filter(
-                jogador =>
-                    jogador.tipo ===
-                    "Diarista"
-            )
-        );
-    
+    // Separa mensalistas e diaristas presentes
+    const mensalistas = presentes.filter(
+        jogador => jogador.tipo === "Mensalista"
+    );
+
+    const diaristas = presentes.filter(
+        jogador => jogador.tipo === "Diarista"
+    );
+
+    // Embaralha cada grupo separadamente
+    const mensalistasEmbaralhados =
+        embaralhar(mensalistas);
+
+    const diaristasEmbaralhados =
+        embaralhar(diaristas);
+
     let jogadoresEmCampo = [];
-    
-    if (mensalistas.length >= 10) {
-    
+
+    // Mensalistas sempre têm prioridade
+    if (mensalistasEmbaralhados.length >= 10) {
+
         jogadoresEmCampo =
-            mensalistas.slice(0, 10);
-    
+            mensalistasEmbaralhados.slice(0, 10);
+
     } else {
-    
+
+        const vagasRestantes =
+            10 - mensalistasEmbaralhados.length;
+
         jogadoresEmCampo = [
-            ...mensalistas,
-            ...diaristas.slice(
+            ...mensalistasEmbaralhados,
+            ...diaristasEmbaralhados.slice(
                 0,
-                10 - mensalistas.length
+                vagasRestantes
             )
         ];
     }
-    
-    const fora =
-        presentes.filter(
-            jogador =>
-                !jogadoresEmCampo.includes(
-                    jogador
-                )
-        );
 
-    // Agora buscamos todas as divisões possíveis
-    // dos 10 jogadores que começarão em campo
+    // Todos que não foram escolhidos ficam fora inicialmente
+    const fora = presentes.filter(
+        jogador =>
+            !jogadoresEmCampo.includes(jogador)
+    );
+
+    // Agora divide os 10 jogadores em dois times equilibrados
     const combinacoes =
-        gerarCombinacoes(jogadoresEmCampo, 5);
+        gerarCombinacoes(
+            jogadoresEmCampo,
+            5
+        );
 
     const solucoes = [];
 
@@ -694,19 +696,25 @@ function gerarDoisTimesComReservas(presentes) {
 
         const time2 =
             jogadoresEmCampo.filter(
-                jogador => !time1.includes(jogador)
+                jogador =>
+                    !time1.includes(jogador)
             );
 
         if (time2.length !== 5) {
             return;
         }
 
-        const notaTime1 = somaNotas(time1);
-        const notaTime2 = somaNotas(time2);
+        const notaTime1 =
+            somaNotas(time1);
 
-        const diferenca = Math.abs(
-            notaTime1 - notaTime2
-        );
+        const notaTime2 =
+            somaNotas(time2);
+
+        const diferenca =
+            Math.abs(
+                notaTime1 - notaTime2
+            );
+
         const formacaoTime1 =
             avaliarFormacao(time1);
 
@@ -723,26 +731,36 @@ function gerarDoisTimesComReservas(presentes) {
             fora,
             notaTime1,
             notaTime2,
-            diferenca,  
+            diferenca,
             penalidadeTatica
         });
 
     });
 
-    // Ordena as divisões dos 10 jogadores
-    // pela diferença entre os times
     solucoes.sort((a, b) => {
 
-    if (a.diferenca !== b.diferenca) {
-        return a.diferenca - b.diferenca;
-    }
+        if (a.diferenca !== b.diferenca) {
+            return a.diferenca - b.diferenca;
+        }
 
-    return (
-        a.penalidadeTatica -
-        b.penalidadeTatica
-    );
+        return (
+            a.penalidadeTatica -
+            b.penalidadeTatica
+        );
 
-});
+    });
+
+    const melhores =
+        solucoes.slice(0, 10);
+
+    const indiceAleatorio =
+        Math.floor(
+            Math.random() *
+            melhores.length
+        );
+
+    return melhores[indiceAleatorio];
+}
 
     // Pega as 10 divisões mais equilibradas
     const melhores =
