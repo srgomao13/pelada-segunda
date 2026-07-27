@@ -647,6 +647,16 @@ function gerarDoisTimesComReservas(presentes) {
     const diaristas = presentes.filter(
         jogador => jogador.tipo === "Diarista"
     );
+    
+    console.log(
+        "MENSALISTAS:",
+        mensalistas.map(j => j.nome)
+    );
+    
+    console.log(
+        "DIARISTAS:",
+        diaristas.map(j => j.nome)
+    );
 
     // Embaralha cada grupo separadamente
     const mensalistasEmbaralhados =
@@ -762,14 +772,13 @@ function gerarDoisTimesComReservas(presentes) {
     return melhores[indiceAleatorio];
 }
 
+
 function compararSolucoes(a, b) {
 
-    // Primeiro: diferença de nota
     if (a.diferenca !== b.diferenca) {
         return a.diferenca - b.diferenca;
     }
 
-    // Depois: qualidade tática
     return (
         a.penalidadeTatica -
         b.penalidadeTatica
