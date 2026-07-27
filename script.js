@@ -106,6 +106,8 @@ let jogadores = [
     }
 ];
 
+let indiceJogadorEditando = null;
+
 function salvarJogadores() {
 
     localStorage.setItem(
@@ -159,6 +161,8 @@ function mostrarJogadores() {
             diaristas
         );
     }
+    
+    adicionarEventosJogadores();
 }
 
 function criarGrupoJogadores(
@@ -186,35 +190,169 @@ function criarGrupoJogadores(
         elemento.className = "jogador";
 
         elemento.innerHTML = `
-            <input
-                type="checkbox"
-                id="jogador-${indice}"
-                value="${indice}"
-            >
-
-            <label for="jogador-${indice}">
-
-                <strong>
-                    ${jogador.nome}
-                </strong>
-
-                <br>
-
-                Nota ${jogador.nota}
-                • ${jogador.posicao}
-                ${
-                    jogador.secundarias.length > 0
-                        ? ` → ${jogador.secundarias.join(" / ")}`
-                        : ""
-                }
-
-            </label>
+            <div class="info-jogador">
+        
+                <input
+                    type="checkbox"
+                    id="jogador-${indice}"
+                    value="${indice}"
+                >
+        
+                <label for="jogador-${indice}">
+        
+                    <strong>
+                        ${jogador.nome}
+                    </strong>
+        
+                    <br>
+        
+                    Nota ${jogador.nota}
+                    • ${jogador.posicao}
+                    ${
+                        jogador.secundarias.length > 0
+                            ? ` → ${jogador.secundarias.join(" / ")}`
+                            : ""
+                    }
+        
+                </label>
+        
+            </div>
+        
+            <div class="acoes-jogador">
+        
+                <button
+                    class="botao-editar"
+                    data-indice="${indice}"
+                >
+                    Editar
+                </button>
+        
+                <button
+                    class="botao-excluir"
+                    data-indice="${indice}"
+                >
+                    Excluir
+                </button>
+        
+            </div>
         `;
 
         listaJogadores.appendChild(
             elemento
         );
     });
+}
+
+function adicionarEventosJogadores() {
+    const botoesEditar =
+        document.querySelectorAll(
+            ".botao-editar"
+        );
+    
+    botoesEditar.forEach(botao => {
+    
+        botao.addEventListener(
+            "click",
+            () => {
+    
+                const indice =
+                    Number(
+                        botao.dataset.indice
+                    );
+    
+                const jogador =
+                    jogadores[indice];
+    
+                indiceJogadorEditando =
+                    indice;
+    
+                document.getElementById(
+                    "novo-nome"
+                ).value =
+                    jogador.nome;
+    
+                document.getElementById(
+                    "novo-tipo"
+                ).value =
+                    jogador.tipo;
+    
+                document.getElementById(
+                    "nova-nota"
+                ).value =
+                    jogador.nota;
+    
+                document.getElementById(
+                    "nova-posicao"
+                ).value =
+                    jogador.posicao;
+    
+                document
+                    .querySelectorAll(
+                        ".secundaria-checkbox"
+                    )
+                    .forEach(checkbox => {
+    
+                        checkbox.checked =
+                            jogador.secundarias
+                                .includes(
+                                    checkbox.value
+                                );
+    
+                    });
+    
+                formularioJogador.style.display =
+                    "block";
+    
+                botaoSalvarJogador.textContent =
+                    "Salvar alterações";
+    
+            }
+        );
+    
+    });
+
+    const botoesExcluir =
+        document.querySelectorAll(
+            ".botao-excluir"
+        );
+
+    botoesExcluir.forEach(botao => {
+
+        botao.addEventListener(
+            "click",
+            () => {
+
+                const indice =
+                    Number(
+                        botao.dataset.indice
+                    );
+
+                const jogador =
+                    jogadores[indice];
+
+                const confirmar =
+                    confirm(
+                        `Excluir ${jogador.nome}?`
+                    );
+
+                if (!confirmar) {
+                    return;
+                }
+
+                jogadores.splice(
+                    indice,
+                    1
+                );
+
+                salvarJogadores();
+
+                mostrarJogadores();
+
+            }
+        );
+
+    });
+
 }
 
 carregarJogadores();
@@ -235,6 +373,13 @@ const formularioJogador =
 botaoAdicionarJogador.addEventListener(
     "click",
     () => {
+
+        indiceJogadorEditando = null;
+        
+        botaoSalvarJogador.textContent =
+            "Salvar jogador";
+        
+        limparFormularioJogador();
 
         const estaAberto =
             formularioJogador.style.display === "block";
@@ -299,12 +444,29 @@ botaoSalvarJogador.addEventListener(
             secundarias: secundariasFiltradas,
             tipo
         };
-
-        jogadores.push(novoJogador);
+        
+        if (indiceJogadorEditando === null) {
+        
+            jogadores.push(
+                novoJogador
+            );
+        
+        } else {
+        
+            jogadores[
+                indiceJogadorEditando
+            ] = novoJogador;
+        
+        }
 
         salvarJogadores();
 
         mostrarJogadores();
+        
+        indiceJogadorEditando = null;
+
+        botaoSalvarJogador.textContent =
+            "Salvar jogador";
 
         limparFormularioJogador();
 
