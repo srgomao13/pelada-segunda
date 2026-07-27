@@ -135,9 +135,53 @@ function mostrarJogadores() {
 
     listaJogadores.innerHTML = "";
 
-    jogadores.forEach((jogador, indice) => {
+    const mensalistas =
+        jogadores.filter(
+            jogador =>
+                jogador.tipo === "Mensalista"
+        );
 
-        const elemento = document.createElement("div");
+    const diaristas =
+        jogadores.filter(
+            jogador =>
+                jogador.tipo === "Diarista"
+        );
+
+    criarGrupoJogadores(
+        "Mensalistas",
+        mensalistas
+    );
+
+    if (diaristas.length > 0) {
+
+        criarGrupoJogadores(
+            "Diaristas",
+            diaristas
+        );
+    }
+}
+
+function criarGrupoJogadores(
+    titulo,
+    grupo
+) {
+
+    const tituloElemento =
+        document.createElement("h2");
+
+    tituloElemento.textContent = titulo;
+
+    listaJogadores.appendChild(
+        tituloElemento
+    );
+
+    grupo.forEach(jogador => {
+
+        const indice =
+            jogadores.indexOf(jogador);
+
+        const elemento =
+            document.createElement("div");
 
         elemento.className = "jogador";
 
@@ -149,12 +193,27 @@ function mostrarJogadores() {
             >
 
             <label for="jogador-${indice}">
-                <strong>${jogador.nome}</strong><br>
-                Nota ${jogador.nota} • ${jogador.posicao}
+
+                <strong>
+                    ${jogador.nome}
+                </strong>
+
+                <br>
+
+                Nota ${jogador.nota}
+                • ${jogador.posicao}
+                ${
+                    jogador.secundarias.length > 0
+                        ? ` → ${jogador.secundarias.join(" / ")}`
+                        : ""
+                }
+
             </label>
         `;
 
-        listaJogadores.appendChild(elemento);
+        listaJogadores.appendChild(
+            elemento
+        );
     });
 }
 
@@ -227,17 +286,17 @@ botaoSalvarJogador.addEventListener(
         checkboxes.forEach(checkbox => {
             secundarias.push(checkbox.value);
         });
-
-        if (!nome) {
-            alert("Digite o nome do jogador.");
-            return;
-        }
-
+        
+        const secundariasFiltradas =
+            secundarias.filter(
+                secundaria => secundaria !== posicao
+            );
+        
         const novoJogador = {
             nome,
             nota,
             posicao,
-            secundarias,
+            secundarias: secundariasFiltradas,
             tipo
         };
 
@@ -580,16 +639,49 @@ function gerarDoisTimesEquilibrados(presentes) {
 
 function gerarDoisTimesComReservas(presentes) {
 
-    // Embaralha todos os presentes
-    const embaralhados = embaralhar(presentes);
-
-    // Os primeiros 10 começam jogando
-    const jogadoresEmCampo =
-        embaralhados.slice(0, 10);
-
-    // Os demais começam fora
+   const mensalistas =
+        embaralhar(
+            presentes.filter(
+                jogador =>
+                    jogador.tipo ===
+                    "Mensalista"
+            )
+        );
+    
+    const diaristas =
+        embaralhar(
+            presentes.filter(
+                jogador =>
+                    jogador.tipo ===
+                    "Diarista"
+            )
+        );
+    
+    let jogadoresEmCampo = [];
+    
+    if (mensalistas.length >= 10) {
+    
+        jogadoresEmCampo =
+            mensalistas.slice(0, 10);
+    
+    } else {
+    
+        jogadoresEmCampo = [
+            ...mensalistas,
+            ...diaristas.slice(
+                0,
+                10 - mensalistas.length
+            )
+        ];
+    }
+    
     const fora =
-        embaralhados.slice(10);
+        presentes.filter(
+            jogador =>
+                !jogadoresEmCampo.includes(
+                    jogador
+                )
+        );
 
     // Agora buscamos todas as divisões possíveis
     // dos 10 jogadores que começarão em campo
