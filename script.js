@@ -1,14 +1,14 @@
 let jogadores = [
     {
         nome: "João Gabriel",
-        nota: 6.5,
+        nota: 7.5,
         posicao: "Atacante",
         secundarias: ["Zagueiro"],
         tipo: "Mensalista"
     },
     {
         nome: "Pedro",
-        nota: 7.5,
+        nota: 8.5,
         posicao: "Atacante",
         secundarias: ["Meia"],
         tipo: "Mensalista"
@@ -57,7 +57,7 @@ let jogadores = [
     },
     {
         nome: "Matheus Santana",
-        nota: 5,
+        nota: 6,
         posicao: "Zagueiro",
         secundarias: [],
         tipo: "Mensalista"
@@ -71,7 +71,7 @@ let jogadores = [
     },
     {
         nome: "Ruan",
-        nota: 6.5,
+        nota: 7,
         posicao: "Meia",
         secundarias: ["Zagueiro"],
         tipo: "Mensalista"
@@ -85,7 +85,7 @@ let jogadores = [
     },
     {
         nome: "Caíque",
-        nota: 8,
+        nota: 8.5,
         posicao: "Meia",
         secundarias: ["Atacante", "Zagueiro"],
         tipo: "Mensalista"
