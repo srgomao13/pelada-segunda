@@ -57,7 +57,7 @@ let jogadores = [
     },
     {
         nome: "Matheus Santana",
-        nota: 6,
+        nota: 5,
         posicao: "Zagueiro",
         secundarias: [],
         tipo: "Mensalista"
