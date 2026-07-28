@@ -957,6 +957,29 @@ function adicionarAoTop10(top10, solucao) {
     }
 }
 
+function respeitaSeparacaoCraques(time1, time2, time3) {
+
+    const jogadoresSeparados = [
+        "Lucas",
+        "Jon",
+        "Caíque"
+    ];
+
+    function quantidadeNoTime(time) {
+
+        return time.filter(
+            jogador =>
+                jogadoresSeparados.includes(jogador.nome)
+        ).length;
+    }
+
+    return (
+        quantidadeNoTime(time1) === 1 &&
+        quantidadeNoTime(time2) === 1 &&
+        quantidadeNoTime(time3) === 1
+    );
+}
+
 function gerarTresTimesEquilibrados(presentes) {
 
     const melhores = [];
@@ -982,6 +1005,15 @@ function gerarTresTimesEquilibrados(presentes) {
                 );
 
             if (time3.length !== 5) {
+                return;
+            }
+            if (
+                !respeitaSeparacaoCraques(
+                    time1,
+                    time2,
+                    time3
+                )
+            ) {
                 return;
             }
 
