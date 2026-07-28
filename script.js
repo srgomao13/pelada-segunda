@@ -78,7 +78,7 @@ let jogadores = [
     },
     {
         nome: "Luiz Felipe",
-        nota: 7.5,
+        nota: 7,
         posicao: "Meia",
         secundarias: ["Zagueiro"],
         tipo: "Mensalista"
