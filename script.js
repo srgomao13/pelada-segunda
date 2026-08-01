@@ -980,6 +980,40 @@ function respeitaSeparacaoCraques(time1, time2, time3) {
     );
 }
 
+function respeitaDistribuicaoAtacantesPrincipais(
+    time1,
+    time2,
+    time3,
+    presentes
+) {
+
+    const atacantesPrincipais =
+        presentes.filter(
+            jogador =>
+                jogador.posicao === "Atacante"
+        );
+
+    // A regra obrigatória só é aplicada
+    // quando existem exatamente 3 atacantes principais
+    if (atacantesPrincipais.length !== 3) {
+        return true;
+    }
+
+    function contarAtacantesPrincipais(time) {
+
+        return time.filter(
+            jogador =>
+                jogador.posicao === "Atacante"
+        ).length;
+    }
+
+    return (
+        contarAtacantesPrincipais(time1) === 1 &&
+        contarAtacantesPrincipais(time2) === 1 &&
+        contarAtacantesPrincipais(time3) === 1
+    );
+}
+
 function gerarTresTimesEquilibrados(presentes) {
 
     const melhores = [];
@@ -1012,6 +1046,17 @@ function gerarTresTimesEquilibrados(presentes) {
                     time1,
                     time2,
                     time3
+                )
+            ) {
+                return;
+            }
+            
+            if (
+                !respeitaDistribuicaoAtacantesPrincipais(
+                    time1,
+                    time2,
+                    time3,
+                    presentes
                 )
             ) {
                 return;
