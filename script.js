@@ -1043,151 +1043,185 @@ function gerarTresTimesEquilibrados(presentes) {
 
     const melhores = [];
 
-    const combinacoesTime1 =
-        gerarCombinacoes(presentes, 5);
+    /*
+    Cria vários sorteios candidatos de forma rápida,
+    em vez de testar TODAS as combinações possíveis.
+    */
+    const NUMERO_TENTATIVAS = 5000;
 
-    combinacoesTime1.forEach(time1 => {
+    for (
+        let tentativa = 0;
+        tentativa < NUMERO_TENTATIVAS;
+        tentativa++
+    ) {
 
-        const restantes =
-            presentes.filter(
-                jogador => !time1.includes(jogador)
-            );
+        const embaralhados =
+            embaralhar(presentes);
 
-        const combinacoesTime2 =
-            gerarCombinacoes(restantes, 5);
+        const time1 =
+            embaralhados.slice(0, 5);
 
-        combinacoesTime2.forEach(time2 => {
+        const time2 =
+            embaralhados.slice(5, 10);
 
-            const time3 =
-                restantes.filter(
-                    jogador => !time2.includes(jogador)
-                );
+        const time3 =
+            embaralhados.slice(10, 15);
 
-            if (time3.length !== 5) {
-                return;
-            }
-            if (
-                !respeitaSeparacaoCraques(
-                    time1,
-                    time2,
-                    time3,
-                    presentes
-                )
-            ) {
-                return;
-            }
-            
-            if (
-                !respeitaDistribuicaoAtacantesPrincipais(
-                    time1,
-                    time2,
-                    time3,
-                    presentes
-                )
-            ) {
-                return;
-            }
-
-            /*
-            Evita analisar a mesma divisão várias vezes.
-
-            Exemplo:
-            A / B / C
-            B / A / C
-            C / B / A
-
-            São os mesmos três times.
-            */
-
-            const chave1 = criarChaveTime(time1);
-            const chave2 = criarChaveTime(time2);
-            const chave3 = criarChaveTime(time3);
-
-            if (
-                !(
-                    chave1 < chave2 &&
-                    chave2 < chave3
-                )
-            ) {
-                return;
-            }
-
-            const notaTime1 =
-                somaNotas(time1);
-
-            const notaTime2 =
-                somaNotas(time2);
-
-            const notaTime3 =
-                somaNotas(time3);
-
-            const maiorNota = Math.max(
-                notaTime1,
-                notaTime2,
-                notaTime3
-            );
-
-            const menorNota = Math.min(
-                notaTime1,
-                notaTime2,
-                notaTime3
-            );
-
-            const diferenca =
-                maiorNota - menorNota;
-
-            const formacaoTime1 =
-                avaliarFormacao(time1);
-
-            const formacaoTime2 =
-                avaliarFormacao(time2);
-
-            const formacaoTime3 =
-                avaliarFormacao(time3);
-
-            const penalidadeTatica =
-                formacaoTime1.penalidade +
-                formacaoTime2.penalidade +
-                formacaoTime3.penalidade;
-
-            const solucao = {
+        /*
+        REGRA 1:
+        Lucas, Jon e Caíque ficam separados
+        quando os três estiverem presentes.
+        */
+        if (
+            !respeitaSeparacaoCraques(
                 time1,
                 time2,
                 time3,
+                presentes
+            )
+        ) {
+            continue;
+        }
 
+        /*
+        REGRA 2:
+        Se existirem exatamente 3 atacantes
+        principais, fica 1 em cada time.
+        */
+        if (
+            !respeitaDistribuicaoAtacantesPrincipais(
+                time1,
+                time2,
+                time3,
+                presentes
+            )
+        ) {
+            continue;
+        }
+
+        const notaTime1 =
+            somaNotas(time1);
+
+        const notaTime2 =
+            somaNotas(time2);
+
+        const notaTime3 =
+            somaNotas(time3);
+
+        const maiorNota =
+            Math.max(
                 notaTime1,
                 notaTime2,
-                notaTime3,
-
-                diferenca,
-                penalidadeTatica
-            };
-
-            adicionarAoTop10(
-                melhores,
-                solucao
+                notaTime3
             );
 
-        });
+        const menorNota =
+            Math.min(
+                notaTime1,
+                notaTime2,
+                notaTime3
+            );
 
-    });
+        const diferenca =
+            maiorNota - menorNota;
+
+        /*
+        Primeiro guardamos apenas candidatos
+        tecnicamente bons.
+
+        Isso evita fazer a avaliação tática
+        pesada em milhares de times ruins.
+        */
+        const solucao = {
+            time1,
+            time2,
+            time3,
+
+            notaTime1,
+            notaTime2,
+            notaTime3,
+
+            diferenca,
+
+            // Será calculada depois
+            penalidadeTatica: 0
+        };
+
+        melhores.push(solucao);
+    }
 
     if (melhores.length === 0) {
 
         console.error(
             "Nenhuma combinação válida encontrada."
         );
-    
+
         return null;
     }
-    
+
+    /*
+    Primeiro ordena SOMENTE pelas notas.
+    */
+    melhores.sort(
+        (a, b) =>
+            a.diferenca - b.diferenca
+    );
+
+    /*
+    Pegamos apenas os 100 melhores
+    tecnicamente para fazer a análise
+    mais pesada das posições.
+    */
+    const candidatos =
+        melhores.slice(0, 100);
+
+    candidatos.forEach(solucao => {
+
+        const formacaoTime1 =
+            avaliarFormacao(
+                solucao.time1
+            );
+
+        const formacaoTime2 =
+            avaliarFormacao(
+                solucao.time2
+            );
+
+        const formacaoTime3 =
+            avaliarFormacao(
+                solucao.time3
+            );
+
+        solucao.penalidadeTatica =
+            formacaoTime1.penalidade +
+            formacaoTime2.penalidade +
+            formacaoTime3.penalidade;
+    });
+
+    /*
+    Agora considera:
+
+    1º equilíbrio das notas
+    2º qualidade das posições
+    */
+    candidatos.sort(
+        compararSolucoes
+    );
+
+    /*
+    Escolhe aleatoriamente entre
+    as 10 melhores soluções.
+    */
+    const top10 =
+        candidatos.slice(0, 10);
+
     const indiceAleatorio =
         Math.floor(
             Math.random() *
-            melhores.length
+            top10.length
         );
 
-    return melhores[indiceAleatorio];
+    return top10[indiceAleatorio];
 }
 
 function mostrarTimes(time1, time2) {
