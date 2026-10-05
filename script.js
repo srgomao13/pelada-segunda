@@ -1,4 +1,4 @@
-let jogadores = [ 
+let jogadores = [
     {
         nome: "João Gabriel",
         nota: 7.5,
