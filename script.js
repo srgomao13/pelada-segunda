@@ -523,14 +523,23 @@ botaoSortear.addEventListener("click", () => {
 
     if (presentes.length === 15) {
 
-        const solucao =
-            gerarTresTimesEquilibrados(presentes);
-
-        mostrarTresTimes(
-            solucao.time1,
-            solucao.time2,
-            solucao.time3
+    const solucao =
+        gerarTresTimesEquilibrados(presentes);
+    
+    if (!solucao) {
+    
+        alert(
+            "Não foi possível formar 3 times com as regras atuais."
         );
+    
+        return;
+    }
+    
+    mostrarTresTimes(
+        solucao.time1,
+        solucao.time2,
+        solucao.time3
+    );
 
     } else {
 
@@ -957,13 +966,29 @@ function adicionarAoTop10(top10, solucao) {
     }
 }
 
-function respeitaSeparacaoCraques(time1, time2, time3) {
+function respeitaSeparacaoCraques(
+    time1,
+    time2,
+    time3,
+    presentes
+) {
 
     const jogadoresSeparados = [
         "Lucas",
         "Jon",
         "Caíque"
     ];
+
+    const craquesPresentes =
+        presentes.filter(
+            jogador =>
+                jogadoresSeparados.includes(jogador.nome)
+        );
+
+    // A regra só é obrigatória se os 3 estiverem presentes
+    if (craquesPresentes.length !== 3) {
+        return true;
+    }
 
     function quantidadeNoTime(time) {
 
@@ -1045,7 +1070,8 @@ function gerarTresTimesEquilibrados(presentes) {
                 !respeitaSeparacaoCraques(
                     time1,
                     time2,
-                    time3
+                    time3,
+                    presentes
                 )
             ) {
                 return;
@@ -1146,6 +1172,15 @@ function gerarTresTimesEquilibrados(presentes) {
 
     });
 
+    if (melhores.length === 0) {
+
+        console.error(
+            "Nenhuma combinação válida encontrada."
+        );
+    
+        return null;
+    }
+    
     const indiceAleatorio =
         Math.floor(
             Math.random() *
